@@ -5,7 +5,7 @@ describe Rack::Remote do
 
   let(:inner_app) { -> (env) { [200, {'Content-Type' => 'text/plain'}, 'All good!'] } }
   let(:app) { Rack::Remote.new(inner_app) }
-  let(:block) { -> (_, _, _) { } }
+  let(:block) { lambda  { |_, _, _| } }
 
   after(:each) { Rack::Remote.clear }
 
