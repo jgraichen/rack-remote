@@ -54,6 +54,9 @@ module Rack
 
       if (cb = self.class.calls[call])
         begin
+          # First rewind request body before read
+          request.body.rewind
+
           data = request.body.read
           json = data.empty? ? {} : MultiJson.load(data)
 
