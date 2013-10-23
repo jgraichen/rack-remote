@@ -54,8 +54,8 @@ module Rack
 
       if (cb = self.class.calls[call])
         begin
-          data = request.body
-          json = data.blank? ? {} : MultiJson.load(data)
+          data = request.body.read
+          json = data.empty? ? {} : MultiJson.load(data)
 
           response = cb.call(json, env, request)
           if response.is_a?(Array) && response.size == 3
@@ -144,7 +144,7 @@ module Rack
           raise StandardError, "Rack Remote Error Response: #{response.code}: #{response.body}" if response.code.to_i != 200
 
           if response['Content-Type'] == 'application/json'
-            response.body.blank? ? {} : MultiJson.load(response.body)
+            response.body.empty? ? {} : MultiJson.load(response.body)
           else
             response.body
           end
