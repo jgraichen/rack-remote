@@ -3,13 +3,44 @@ require 'rack/request'
 require 'multi_json'
 
 module Rack
-
   # Rack::Remote is a Rack middleware for intercepting calls
   # and invoking remote calls. It can be used to call remote
   # function for test instructions in distributed systems.
   #
   class Remote
     require 'rack/remote/railtie' if defined?(Rails)
+
+    class ChainedError < StandardError
+      attr_reader :cause
+
+      def initialize(*attrs)
+        if attrs.last.is_a?(Hash) && attrs.last[:cause].is_a?(Exception)
+          @cause = attrs.last.delete(:cause)
+          attrs.pop if attrs.last.empty?
+        end
+        super *attrs
+      end
+
+      def set_backtrace(trace)
+        trace.is_a?(Array) ? trace.map!(&:to_s) : trace = trace.to_s.split("\n")
+        trace.map! { |line| "  #{line}" }
+        if cause
+          trace << "caused by #{cause.class.name}: #{cause.message}"
+          trace += cause.backtrace.map! { |line| "  #{line}" }
+        end
+        super trace
+      end
+    end
+
+    class RemoteError < StandardError
+      def initialize(opts = {})
+        super "#{opts[:class]}: #{opts[:error]}"
+        set_backtrace opts[:backtrace]
+      end
+    end
+
+    class RemoteCallFailed < ChainedError
+    end
 
     def initialize(app)
       @app = app
@@ -22,14 +53,21 @@ module Rack
       call    = env['HTTP_X_RACK_REMOTE_CALL'].to_s
 
       if (cb = self.class.calls[call])
-        response = cb.call(request.params, env, request)
-        if response.is_a?(Array) && response.size == 3
-          return response
-        else
-          [200, {'Content-Type' => 'application/json'}, StringIO.new(MultiJson.dump response) ]
+        begin
+          data = request.body
+          json = data.blank? ? {} : MultiJson.load(data)
+
+          response = cb.call(json, env, request)
+          if response.is_a?(Array) && response.size == 3
+            return response
+          else
+            [200, {'Content-Type' => 'application/json'}, StringIO.new(MultiJson.dump response) ]
+          end
+        rescue => err
+          [500, {'Content-Type' => 'application/json'}, StringIO.new(MultiJson.dump error: err.message, backtrace: err.backtrace, class: err.class.name) ]
         end
       else
-        [404, {'Content-Type' => 'application/json'}, StringIO.new('{"error":"remote call not defined"}') ]
+        [404, {'Content-Type' => 'application/json'}, StringIO.new(MultiJson.dump error: 'remote call not defined', calls: call, list: self.class.calls.keys) ]
       end
     end
 
@@ -90,13 +128,23 @@ module Rack
           end
 
           request['X-Rack-Remote-Call'] = call.to_s
-          request.form_data = params
+          request['Content-Type'] = 'application/json'
+          request.body = MultiJson.dump(params)
 
           response = http.request request
+          if response.code.to_i == 500 and response['Content-Type'] == 'application/json'
+            json = MultiJson.load(response.body)
+
+            if json['error'] && json['backtrace'] && json['class']
+              remote_error = RemoteError.new class: json['class'], error: json['error'], backtrace: json['backtrace']
+              raise Rack::Remote::RemoteCallFailed.new("Remote call returned error code #{response.code}", cause: remote_error)
+            end
+          end
+
           raise StandardError, "Rack Remote Error Response: #{response.code}: #{response.body}" if response.code.to_i != 200
 
           if response['Content-Type'] == 'application/json'
-            MultiJson.load response.body
+            response.body.blank? ? {} : MultiJson.load(response.body)
           else
             response.body
           end

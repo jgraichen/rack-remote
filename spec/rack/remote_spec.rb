@@ -13,7 +13,7 @@ describe Rack::Remote do
     before { Rack::Remote.register :factory_girl, &block }
 
     context 'with intercept call' do
-      let(:request) { -> { get '/', {}, {'HTTP_X_RACK_REMOTE_CALL' => 'factory_girl'} }}
+      let(:request) { -> { post '/', {}, {'HTTP_X_RACK_REMOTE_CALL' => 'factory_girl'} }}
 
       it 'should invoke registered call' do
         expect(block).to receive(:call)
@@ -27,7 +27,7 @@ describe Rack::Remote do
     end
 
     context 'with non-rack-remote call' do
-      let(:request) { -> { get '/' }}
+      let(:request) { -> { post '/' }}
 
       it 'should delegate request to inner app' do
         expect(inner_app).to receive(:call).and_call_original
@@ -72,6 +72,12 @@ describe Rack::Remote do
       it 'should invoke remote call' do
         expect(block).to receive(:call).with({ 'param1' => 'val1' }, kind_of(Hash), kind_of(Rack::Request)).and_return({id: 1})
         ret = Rack::Remote.invoke :users, :factory_girl, param1: 'val1'
+        expect(ret).to eq({'id' => 1})
+      end
+
+      it 'should invoke remote call (2)' do
+        expect(block).to receive(:call).with({ 'param1' => ['val1', {'abc' => 'cde'}] }, kind_of(Hash), kind_of(Rack::Request)).and_return({id: 1})
+        ret = Rack::Remote.invoke :users, :factory_girl, param1: ['val1', {abc: :cde}]
         expect(ret).to eq({'id' => 1})
       end
     end
