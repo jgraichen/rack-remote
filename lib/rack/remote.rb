@@ -9,6 +9,8 @@ module Rack
   # function for test instructions in distributed systems.
   #
   class Remote
+    require 'rack/remote/railtie' if defined?(Rails)
+
     def initialize(app)
       @app = app
     end
