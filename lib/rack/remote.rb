@@ -25,7 +25,7 @@ module Rack
         trace.is_a?(Array) ? trace.map!(&:to_s) : trace = trace.to_s.split("\n")
         trace.map! { |line| "  #{line}" }
         if cause
-          trace << "caused by #{cause.class.name}: #{cause.message}"
+          trace << "/:0 caused by #{cause.class.name}: #{cause.message}"
           trace += cause.backtrace.map! { |line| "  #{line}" }
         end
         super trace
