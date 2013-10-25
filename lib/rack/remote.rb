@@ -140,7 +140,8 @@ module Rack
 
             if json['error'] && json['backtrace'] && json['class']
               remote_error = RemoteError.new class: json['class'], error: json['error'], backtrace: json['backtrace']
-              raise Rack::Remote::RemoteCallFailed.new("Remote call returned error code #{response.code}", cause: remote_error)
+              raise remote_error
+              #raise Rack::Remote::RemoteCallFailed.new("Remote call returned error code #{response.code}", cause: remote_error)
             end
           end
 
