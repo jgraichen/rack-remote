@@ -35,7 +35,7 @@ Return value can be a Rack response array or any object that will be converted t
 ### On client side
 
 ```ruby
-Rack::Remote.add :srv1, 'http://serv.domain.tld/proxyed/path'
+Rack::Remote.add :srv1, url: 'http://serv.domain.tld/proxyed/path'
 Rack::Remote.invoke :srv1, :factory_girl, factory: 'user'
 Rack::Remote.invoke 'http://serv.domain.tld/proxyed/path', :factory_girl, factory: 'user'
 ```
