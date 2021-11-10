@@ -28,6 +28,4 @@ RSpec.configure do |config|
     # Only allow expect syntax
     c.syntax = :expect
   end
-
-  config.include WebMock::API
 end

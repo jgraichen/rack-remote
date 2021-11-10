@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 gem 'rake'
 gem 'rspec'
 gem 'coveralls'
-gem 'webmock', '~> 1.7'
+gem 'webmock', '~> 3.0'
 gem 'rack-test'
 
 # Specify your gem's dependencies in gemspec
