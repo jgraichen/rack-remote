@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Rack::Remote
   class Railtie < ::Rails::Railtie
     initializer 'rack-remote.middleware' do |app|

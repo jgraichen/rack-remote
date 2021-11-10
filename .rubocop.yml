@@ -9,3 +9,6 @@ AllCops:
 Layout/LineLength:
   Exclude:
     - spec/**/*
+
+RSpec/MessageSpies:
+  EnforcedStyle: receive
