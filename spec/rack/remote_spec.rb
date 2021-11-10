@@ -12,10 +12,10 @@ describe Rack::Remote do
   after { described_class.clear }
 
   describe 'call' do
-    before { described_class.register :factory_girl, &block }
+    before { described_class.register :factory_bot, &block }
 
     context 'with intercept call' do
-      let(:request) { -> { post '/', {}, {'HTTP_X_RACK_REMOTE_CALL' => 'factory_girl'} } }
+      let(:request) { -> { post '/', {}, {'HTTP_X_RACK_REMOTE_CALL' => 'factory_bot'} } }
 
       it 'invokes registered call' do
         expect(block).to receive(:call)
@@ -42,12 +42,12 @@ describe Rack::Remote do
     describe '#register' do
       it 'adds callback' do
         expect do
-          described_class.register :factory_girl, &block
+          described_class.register :factory_bot, &block
         end.to change { described_class.calls.size }.from(0).to(1)
       end
 
       it 'adds given callback' do
-        described_class.register :factory_girl, &block
+        described_class.register :factory_bot, &block
         expect(described_class.calls.values.first).to equal block
       end
     end
@@ -69,19 +69,19 @@ describe Rack::Remote do
       before do
         stub_request(:any, /users\.example\.org/).to_rack(app)
 
-        described_class.register :factory_girl, &block
+        described_class.register :factory_bot, &block
         described_class.add :users, url: 'http://users.example.org'
       end
 
       it 'invokes remote call' do
         expect(block).to receive(:call).with({'param1' => 'val1'}, kind_of(Hash), kind_of(Rack::Request)).and_return({id: 1})
-        ret = described_class.invoke :users, :factory_girl, param1: 'val1'
+        ret = described_class.invoke :users, :factory_bot, param1: 'val1'
         expect(ret).to eq({'id' => 1})
       end
 
       it 'invokes remote call (2)' do
         expect(block).to receive(:call).with({'param1' => ['val1', {'abc' => 'cde'}]}, kind_of(Hash), kind_of(Rack::Request)).and_return({id: 1})
-        ret = described_class.invoke :users, :factory_girl, param1: ['val1', {abc: :cde}]
+        ret = described_class.invoke :users, :factory_bot, param1: ['val1', {abc: :cde}]
         expect(ret).to eq({'id' => 1})
       end
     end
