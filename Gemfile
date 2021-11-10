@@ -10,3 +10,7 @@ gem 'rspec'
 gem 'coveralls'
 gem 'webmock', '~> 3.0'
 gem 'rack-test'
+
+group :test do
+  gem 'my-rubocop', github: 'jgraichen/my-rubocop'
+end
