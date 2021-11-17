@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'coveralls'
 Coveralls.wear! do
   add_filter 'spec'
@@ -7,7 +9,7 @@ require 'rack/test'
 require 'rack/remote'
 require 'webmock/rspec'
 
-Dir[File.expand_path('spec/support/**/*.rb')].each { |f| require f }
+Dir[File.expand_path('spec/support/**/*.rb')].sort.each {|f| require f }
 
 RSpec.configure do |config|
   # ## Mock Framework
@@ -28,6 +30,4 @@ RSpec.configure do |config|
     # Only allow expect syntax
     c.syntax = :expect
   end
-
-  config.include WebMock::API
 end

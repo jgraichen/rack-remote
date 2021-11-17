@@ -1,13 +1,18 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
+
+# Specify your gem's dependencies in rack-remote.gemspec
+gemspec
 
 # Development gems
 #
+gem 'coveralls'
+gem 'rack-test'
 gem 'rake'
 gem 'rspec'
-gem 'coveralls'
-gem 'webmock', '~> 1.7'
-gem 'rack-test'
+gem 'webmock', '~> 3.0'
 
-# Specify your gem's dependencies in gemspec
-gemroot = File.dirname File.absolute_path __FILE__
-gemspec path: gemroot
+group :test do
+  gem 'my-rubocop', github: 'jgraichen/my-rubocop'
+end

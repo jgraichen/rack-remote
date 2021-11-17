@@ -1,0 +1,14 @@
+inherit_gem:
+  my-rubocop: default.yml
+
+AllCops:
+  TargetRubyVersion: 2.5
+  Exclude:
+    - vendor/**/*
+
+Layout/LineLength:
+  Exclude:
+    - spec/**/*
+
+RSpec/MessageSpies:
+  EnforcedStyle: receive

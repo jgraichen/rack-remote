@@ -25,8 +25,8 @@ Or install it yourself as:
 Register available remote calls:
 
 ```ruby
-Rack::Remote.register :factory_girl do |params, env, request|
-  FactoryGirl.create params[:factory]
+Rack::Remote.register :factory_bot do |params, env, request|
+  FactoryBot.create params[:factory]
 end
 ```
 
@@ -36,8 +36,8 @@ Return value can be a Rack response array or any object that will be converted t
 
 ```ruby
 Rack::Remote.add :srv1, url: 'http://serv.domain.tld/proxyed/path'
-Rack::Remote.invoke :srv1, :factory_girl, factory: 'user'
-Rack::Remote.invoke 'http://serv.domain.tld/proxyed/path', :factory_girl, factory: 'user'
+Rack::Remote.invoke :srv1, :factory_bot, factory: 'user'
+Rack::Remote.invoke 'http://serv.domain.tld/proxyed/path', :factory_bot, factory: 'user'
 ```
 
 ## Contributing
