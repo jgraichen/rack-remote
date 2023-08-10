@@ -14,5 +14,5 @@ gem 'rspec'
 gem 'webmock', '~> 3.0'
 
 group :test do
-  gem 'my-rubocop', github: 'jgraichen/my-rubocop'
+  gem 'rubocop-config', github: 'jgraichen/rubocop-config', ref: 'v11', require: false
 end

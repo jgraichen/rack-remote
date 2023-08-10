@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.name          = 'rack-remote'
   spec.version       = Rack::Remote::VERSION
   spec.authors       = ['Jan Graichen']
-  spec.email         = %w[jg@altimos.de]
+  spec.email         = %w[jgraichen@altimos.de]
   spec.summary       = 'Small request intercepting rack middleware to ' \
                        'invoke remote calls over HTTP.'
   spec.description   = 'Small request intercepting rack middleware to ' \
@@ -19,11 +19,12 @@ Gem::Specification.new do |spec|
 
   spec.files         = `git ls-files -z`.split("\x0")
   spec.executables   = spec.files.grep(%r{^bin/}) {|f| File.basename(f) }
-  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = %w[lib]
 
   spec.add_dependency 'multi_json'
   spec.add_dependency 'rack'
 
-  spec.add_development_dependency 'bundler'
+  spec.metadata['rubygems_mfa_required'] = 'true'
+
+  spec.required_ruby_version = Gem::Requirement.new('>= 2.5.0')
 end

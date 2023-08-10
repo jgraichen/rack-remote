@@ -74,14 +74,22 @@ describe Rack::Remote do
       end
 
       it 'invokes remote call' do
-        expect(block).to receive(:call).with({'param1' => 'val1'}, kind_of(Hash), kind_of(Rack::Request)).and_return({id: 1})
+        allow(block).to receive(:call)
+          .with({'param1' => 'val1'}, kind_of(Hash), kind_of(Rack::Request))
+          .and_return({id: 1})
+
         ret = described_class.invoke :users, :factory_bot, param1: 'val1'
+
         expect(ret).to eq({'id' => 1})
       end
 
       it 'invokes remote call (2)' do
-        expect(block).to receive(:call).with({'param1' => ['val1', {'abc' => 'cde'}]}, kind_of(Hash), kind_of(Rack::Request)).and_return({id: 1})
+        allow(block).to receive(:call)
+          .with({'param1' => ['val1', {'abc' => 'cde'}]}, kind_of(Hash), kind_of(Rack::Request))
+          .and_return({id: 1})
+
         ret = described_class.invoke :users, :factory_bot, param1: ['val1', {abc: :cde}]
+
         expect(ret).to eq({'id' => 1})
       end
     end

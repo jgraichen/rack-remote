@@ -68,16 +68,16 @@ module Rack
           else
             [
               200, {'Content-Type' => 'application/json'},
-              StringIO.new(MultiJson.dump(response))
+              StringIO.new(MultiJson.dump(response)),
             ]
           end
         rescue StandardError => e
           [
             500, {'Content-Type' => 'application/json'}, StringIO.new(
               MultiJson.dump(
-                error: e.message, backtrace: e.backtrace, class: e.class.name
-              )
-            )
+                error: e.message, backtrace: e.backtrace, class: e.class.name,
+              ),
+            ),
           ]
         end
       else
@@ -86,9 +86,9 @@ module Rack
             MultiJson.dump(
               error: 'remote call not defined',
               calls: call,
-              list: self.class.calls.keys
-            )
-          )
+              list: self.class.calls.keys,
+            ),
+          ),
         ]
       end
     end
