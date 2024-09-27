@@ -30,13 +30,13 @@ module Rack
           trace << "/:0 caused by #{cause.class.name}: #{cause.message}"
           trace += cause.backtrace.map! {|line| "  #{line}" }
         end
-        super trace
+        super
       end
     end
 
     class RemoteError < StandardError
       def initialize(opts = {})
-        super "#{opts[:class]}: #{opts[:error]}"
+        super("#{opts[:class]}: #{opts[:error]}")
         set_backtrace opts[:backtrace]
       end
     end
