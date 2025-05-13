@@ -1,9 +1,16 @@
 # frozen_string_literal: true
 
-require 'coveralls'
-Coveralls.wear! do
+require 'simplecov'
+require 'simplecov-cobertura'
+
+SimpleCov.start do
   add_filter 'spec'
 end
+
+SimpleCov.formatters = [
+  SimpleCov::Formatter::HTMLFormatter,
+  SimpleCov::Formatter::CoberturaFormatter,
+]
 
 require 'rack/test'
 require 'rack/remote'

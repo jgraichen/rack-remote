@@ -7,12 +7,20 @@ gemspec
 
 # Development gems
 #
-gem 'coveralls'
-gem 'rack-test'
 gem 'rake'
-gem 'rspec'
-gem 'webmock', '~> 3.0'
+gem 'rspec', '~> 3.0'
+
+group :development do
+  gem 'rubocop-config', github: 'jgraichen/rubocop-config', tag: 'v14', require: false
+end
 
 group :test do
-  gem 'rubocop-config', github: 'jgraichen/rubocop-config', ref: 'v12', require: false
+  gem 'rspec-github', require: false
+  gem 'rspec-rails'
+
+  gem 'simplecov'
+  gem 'simplecov-cobertura'
+
+  gem 'rack-test'
+  gem 'webmock', '~> 3.0'
 end

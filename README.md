@@ -6,17 +6,23 @@ remote services for running integration tests on distributed applications.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add this line to your application's `Gemfile`:
 
-    gem 'rack-remote'
+```ruby
+gem 'rack-remote'
+```
 
 And then execute:
 
-    $ bundle
+```console
+bundle
+```
 
 Or install it yourself as:
 
-    $ gem install rack-remote
+```console
+gem install rack-remote
+```
 
 ## Usage
 
@@ -44,8 +50,8 @@ Rack::Remote.invoke 'http://serv.domain.tld/proxyed/path', :factory_bot, factory
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
-4. Add specs
-5. Add features
-6. Commit your changes (`git commit -am 'Add some feature'`)
-7. Push to the branch (`git push origin my-new-feature`)
-8. Create new Pull Request
+3. Add specs
+4. Add features
+5. Commit your changes (`git commit -am 'Add some feature'`)
+6. Push to the branch (`git push origin my-new-feature`)
+7. Create new Pull Request
